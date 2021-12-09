@@ -1,51 +1,42 @@
-import 'package:datadog_sdk/datadog_sdk.dart';
+import 'package:datadog_sdk/pigeon.dart';
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
 
 import 'datadog_sdk_platform_interface.dart';
 
 class DatadogSdkMethodChannel extends DatadogSdkPlatform {
-  @visibleForTesting
-  final methodChannel = const MethodChannel('datadog_sdk_flutter');
+  final pigeon = DdSdkPigeon();
 
   @override
   Future<void> initialize(DdSdkConfiguration configuration) async {
-    await methodChannel.invokeMethod(
-        'DdSdk.initialize', {'configuration': configuration.encode()});
+    return pigeon.initialize(configuration);
   }
 
   @override
-  DdLogs get ddLogs => DdLogsMethodChannel(methodChannel);
+  DdLogs get ddLogs => DdLogsMethodChannel();
 }
 
 class DdLogsMethodChannel extends DdLogs {
-  final MethodChannel methodChannel;
-
-  DdLogsMethodChannel(this.methodChannel);
+  final pigeon = DdLogsPigeon();
 
   @override
   Future<void> debug(String message,
       [Map<String, Object?> context = const {}]) {
-    return methodChannel
-        .invokeMethod('DdLogs.debug', {'message': message, 'context': context});
+    return pigeon.debug(message, context);
   }
 
   @override
   Future<void> info(String message, [Map<String, Object?> context = const {}]) {
-    return methodChannel
-        .invokeMethod('DdLogs.info', {'message': message, 'context': context});
+    return pigeon.info(message, context);
   }
 
   @override
   Future<void> warn(String message, [Map<String, Object?> context = const {}]) {
-    return methodChannel
-        .invokeMethod('DdLogs.warn', {'message': message, 'context': context});
+    return pigeon.warn(message, context);
   }
 
   @override
   Future<void> error(String message,
       [Map<String, Object?> context = const {}]) {
-    return methodChannel
-        .invokeMethod('DdLogs.error', {'message': message, 'context': context});
+    return pigeon.error(message, context);
   }
 }

@@ -4,6 +4,7 @@ import 'dart:html' as html show window;
 
 import 'package:datadog_sdk/datadog_sdk.dart';
 import 'package:datadog_sdk/datadog_sdk_platform_interface.dart';
+import 'package:datadog_sdk/pigeon.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 /// A web implementation of the DatadogSdk plugin.

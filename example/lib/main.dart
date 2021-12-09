@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:datadog_sdk/pigeon.dart';
 import 'package:flutter/material.dart';
 
 import 'package:datadog_sdk/datadog_sdk.dart';
@@ -13,12 +14,11 @@ void main() async {
   final ddConfig = await rootBundle.loadStructuredData<Map<String, dynamic>>(
       'config/ddconfig.json', (value) => Future.value(jsonDecode(value)));
 
-  final configuration = DdSdkConfiguration(
-    clientToken: ddConfig['client_token'],
-    env: ddConfig['env'],
-    applicationId: ddConfig['applicationId'],
-    trackingConsent: 'granted',
-  );
+  final configuration = DdSdkConfiguration()
+    ..clientToken = ddConfig['client_token']
+    ..env = ddConfig['env']
+    ..applicationId = ddConfig['applicationId']
+    ..trackingConsent = 'granted';
   final ddsdk = DatadogSdk();
   ddsdk.initialize(configuration);
 

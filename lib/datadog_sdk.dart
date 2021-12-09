@@ -1,47 +1,46 @@
+import 'package:datadog_sdk/pigeon.dart';
+
 import './datadog_sdk_platform_interface.dart';
 
 import './version.dart' show ddSdkVersion;
 
-class DdSdkConfiguration {
-  final String clientToken;
-  final String env;
-  final String? applicationId;
-  final bool nativeCrashReportEnabled;
-  final double sampleRate;
-  final String? site;
-  final String? trackingConsent;
-  final Map<String, dynamic> additionalConfig = {};
+// class DdSdkConfiguration {
+//   final String clientToken;
+//   final String env;
+//   final String? applicationId;
+//   final bool nativeCrashReportEnabled;
+//   final double sampleRate;
+//   final String? site;
+//   final String? trackingConsent;
+//   final Map<String, dynamic> additionalConfig = {};
 
-  DdSdkConfiguration({
-    required this.clientToken,
-    required this.env,
-    this.applicationId,
-    this.nativeCrashReportEnabled = false,
-    this.sampleRate = 100.0,
-    this.site,
-    this.trackingConsent,
-  });
+//   DdSdkConfiguration({
+//     required this.clientToken,
+//     required this.env,
+//     this.applicationId,
+//     this.nativeCrashReportEnabled = false,
+//     this.sampleRate = 100.0,
+//     this.site,
+//     this.trackingConsent,
+//   });
 
-  Map<String, dynamic> encode() {
-    return {
-      'clientToken': clientToken,
-      'env': env,
-      'applicationId': applicationId,
-      'nativeCrashReportEnabled': nativeCrashReportEnabled,
-      'sampleRate': sampleRate,
-      'site': site,
-      'trackingConsent': trackingConsent,
-      'additionalConfig': additionalConfig
-    };
-  }
-}
+//   Map<String, dynamic> encode() {
+//     return {
+//       'clientToken': clientToken,
+//       'env': env,
+//       'applicationId': applicationId,
+//       'nativeCrashReportEnabled': nativeCrashReportEnabled,
+//       'sampleRate': sampleRate,
+//       'site': site,
+//       'trackingConsent': trackingConsent,
+//       'additionalConfig': additionalConfig
+//     };
+//   }
+// }
 
 class _DatadogConfigKey {
   static const source = '_dd.source';
   static const version = '_dd.sdk_version';
-  static const serviceName = '_dd.service_name';
-  static const verbosity = '_dd.sdk_verbosity';
-  static const nativeViewTracking = '_dd.native_view_tracking';
 }
 
 class DatadogSdk {
@@ -58,8 +57,9 @@ class DatadogSdk {
   DatadogSdk._();
 
   Future<void> initialize(DdSdkConfiguration configuration) {
-    configuration.additionalConfig[_DatadogConfigKey.source] = 'flutter';
-    configuration.additionalConfig[_DatadogConfigKey.version] = ddSdkVersion;
+    configuration.additionalConfig ??= {};
+    //configuration.additionalConfig![_DatadogConfigKey.source] = 'flutter';
+    configuration.additionalConfig![_DatadogConfigKey.version] = ddSdkVersion;
 
     return _platform.initialize(configuration);
   }

@@ -11,5 +11,6 @@
 @implementation DatadogSdkPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   [SwiftDatadogSdkPlugin registerWithRegistrar:registrar];
+    [SwiftDdLogsPlugin registerWithRegistrar:registrar];
 }
 @end

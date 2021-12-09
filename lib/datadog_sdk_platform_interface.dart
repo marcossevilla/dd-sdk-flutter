@@ -1,5 +1,4 @@
-
-import 'package:datadog_sdk/datadog_sdk.dart';
+import 'package:datadog_sdk/pigeon.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'datadog_sdk_method_channel.dart';

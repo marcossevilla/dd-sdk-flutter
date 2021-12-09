@@ -2,80 +2,62 @@ import Flutter
 import UIKit
 import DatadogSDKBridge
 
-extension DdSdkConfiguration {
-    static func deccode(value: [String: Any?]) -> DdSdkConfiguration {
-        return DdSdkConfiguration(
-            clientToken: value["clientToken"] as! NSString,
-            env: value["env"] as! NSString,
-            applicationId: value["applicationId"] as? NSString,
-            nativeCrashReportEnabled: (value["nativeCrashReportEnabled"] as? NSNumber)?.boolValue,
-            sampleRate: (value["sampleRate"] as? NSNumber)?.doubleValue,
-            site: value["site"] as? NSString,
-            trackingConsent: value["trackingConsent"] as? NSString,
-            additionalConfig: value["additionalConfig"] as? NSDictionary
+public class SwiftDatadogSdkPlugin: NSObject, FlutterPlugin, FLTDdSdkPigeon {
+    let nativeSdk: DdSdk
+
+    override init() {
+        nativeSdk = Bridge.getDdSdk()
+
+        super.init()
+    }
+
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let api : FLTDdSdkPigeon & NSObjectProtocol = SwiftDatadogSdkPlugin()
+        FLTDdSdkPigeonSetup(registrar.messenger(), api)
+    }
+
+    public func initializeConfiguration(_ configuration: FLTDdSdkConfiguration, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        let internalConfiguration = DdSdkConfiguration(
+            clientToken: configuration.clientToken! as NSString,
+            env: configuration.env! as NSString,
+            applicationId: configuration.applicationId! as NSString,
+            nativeCrashReportEnabled: configuration.nativeCrashReportEnabled?.boolValue,
+            sampleRate: configuration.sampleRate?.doubleValue,
+            site: configuration.site as NSString?,
+            trackingConsent: configuration.trackingConsent as NSString?,
+            additionalConfig: configuration.additionalConfig as NSDictionary?
         )
+        nativeSdk.initialize(configuration: internalConfiguration)
     }
 }
 
-public class SwiftDatadogSdkPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "datadog_sdk_flutter", binaryMessenger: registrar.messenger())
-    let instance = SwiftDatadogSdkPlugin()
-    registrar.addMethodCallDelegate(instance, channel: channel)
-  }
+public class SwiftDdLogsPlugin: NSObject, FlutterPlugin, FLTDdLogsPigeon {
+    let nativeSdk: DdLogs
 
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    switch call.method {
-    case "DdSdk.initialize":
-        guard let arguments = call.arguments as? [String:Any] else {
-          result(FlutterError(code: "DatadogSDK:InvalidOperation", message: "No arguments in call to DdSdk.initialize.", details: nil))
-          return
-        }
+    override init() {
+        nativeSdk = Bridge.getDdLogs()
 
-        let configuration = DdSdkConfiguration.deccode(
-            value: arguments["configuration"] as! [String: Any?]
-        )
-        Bridge.getDdSdk().initialize(configuration: configuration)
-        result(nil)
-    case "DdLogs.debug":
-        let arguments = call.arguments as! [String:Any];
+        super.init()
+    }
 
-        let message = arguments["message"] as! NSString
-        let context = arguments["context"] as! NSDictionary
+    public func debugMessage(_ message: String, context: [String : Any], error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        nativeSdk.debug(message: message as NSString, context: context as NSDictionary)
+    }
 
-        Bridge.getDdLogs().debug(message: message, context: context)
-        result(nil)
+    public func infoMessage(_ message: String, context: [String : Any], error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        nativeSdk.info(message: message as NSString, context: context as NSDictionary)
+    }
 
-    case "DdLogs.info":
-        let arguments = call.arguments as! [String:Any];
+    public func warnMessage(_ message: String, context: [String : Any], error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        nativeSdk.warn(message: message as NSString, context: context as NSDictionary)
+    }
 
-        let message = arguments["message"] as! NSString
-        let context = arguments["context"] as! NSDictionary
+    public func errorMessage(_ message: String, context: [String : Any], error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        nativeSdk.error(message: message as NSString, context: context as NSDictionary)
+    }
 
-        Bridge.getDdLogs().debug(message: message, context: context)
-        result(nil)
-
-    case "DdLogs.warn":
-        let arguments = call.arguments as! [String:Any];
-
-        let message = arguments["message"] as! NSString
-        let context = arguments["context"] as! NSDictionary
-
-        Bridge.getDdLogs().debug(message: message, context: context)
-        result(nil)
-
-    case "DdLogs.error":
-        let arguments = call.arguments as! [String:Any];
-
-        let message = arguments["message"] as! NSString
-        let context = arguments["context"] as! NSDictionary
-
-        Bridge.getDdLogs().debug(message: message, context: context)
-        result(nil)
-        
-    default:
-        result(FlutterMethodNotImplemented)
-    }    
-  }
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let api : FLTDdLogsPigeon & NSObjectProtocol = SwiftDdLogsPlugin()
+        FLTDdLogsPigeonSetup(registrar.messenger(), api)
+    }
 }
-
