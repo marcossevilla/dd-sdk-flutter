@@ -289,8 +289,8 @@ class DdSdkConfiguration {
   /// configuration is null, RUM is disabled
   RumConfiguration? rumConfiguration;
 
-  /// Any additional configuration to be passed to the native SDKs
-  final Map<String, dynamic> additionalConfig = {};
+  /// Any additional configuration to be passed to the native SDKs.
+  final Map<String, dynamic> additionalConfig;
 
   /// Configurations for additional plugins that will be created after Datadog
   /// is initialized.
@@ -310,6 +310,7 @@ class DdSdkConfiguration {
     this.loggingConfiguration,
     this.tracingConfiguration,
     this.rumConfiguration,
+    this.additionalConfig = const {},
   });
 
   void addPlugin(DatadogPluginConfiguration pluginConfiguration) =>
@@ -328,7 +329,7 @@ class DdSdkConfiguration {
       'customEndpoint': customEndpoint,
       'tracingConfiguration': tracingConfiguration?.encode(),
       'rumConfiguration': rumConfiguration?.encode(),
-      'additionalConfig': additionalConfig
+      'additionalConfig': additionalConfig,
     };
   }
 }
