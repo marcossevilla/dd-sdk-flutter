@@ -88,7 +88,7 @@ class LoggingConfiguration {
   /// Defaults to `false`.
   bool sendNetworkInfo;
 
-  /// Enables logs to be printed to debugger console for debug build
+  /// Enables logs to be printed to debugger console for debug build.
   ///
   /// Defaults to `false`.
   bool printLogsToConsole;
@@ -98,7 +98,7 @@ class LoggingConfiguration {
   /// Defaults to `true`.
   bool sendLogsToDatadog;
 
-  /// Sets the level of logs that get sent to Datadog
+  /// Sets the level of logs that get sent to Datadog.
   ///
   /// Logs below the configured threshold are not sent to Datadog, while
   /// logs at this threshold and above are, so long as [sendLogsToDatadog]
@@ -189,16 +189,16 @@ class RumConfiguration {
 
   /// Sets the sampling rate for RUM Sessions.
   ///
-  /// This property is deprecated in favor of [sessionSamplingRate]
+  /// This property is deprecated in favor of [sessionSamplingRate].
   @Deprecated('Use sessionSamplingRate instead')
   double get sampleRate => sessionSamplingRate;
   set sampleRate(double value) => sessionSamplingRate = value;
 
   /// Sets the sampling rate for RUM Sessions.
   ///
-  /// The sampling rate must be a value between `0.0` and `100.0`. A value of
-  /// `0.0` means no RUM events will be sent, `100.0` means all sessions will be
-  /// sent
+  /// The sampling rate must be a value between `0.0` and `100.0`.
+  /// A value of `0.0` means no RUM events will be sent,
+  /// `100.0` means all sessions will be sent.
   ///
   /// Defaults to `100.0`.
   double sessionSamplingRate;
@@ -207,7 +207,7 @@ class RumConfiguration {
   ///
   /// The sampling rate must be a value between `0.0` and `100.0`. A value of
   /// `0.0` means no resources will include APM tracing, `100.0` resource will
-  /// include APM tracing
+  /// include APM tracing.
   ///
   /// Defaults to `20.0`.
   double tracingSamplingRate;
@@ -243,7 +243,7 @@ class DdSdkConfiguration {
   /// used to generate your client token.
   DatadogSite site;
 
-  /// The service name for this application
+  /// The service name for this application.
   String? serviceName;
 
   /// The initial [TrackingConsent] for this user.
@@ -277,23 +277,23 @@ class DdSdkConfiguration {
   ///
   List<String> firstPartyHosts = [];
 
-  /// Configuration for the logging feature. If this configuration is null,
-  /// logging is disabled.
+  /// Configuration for the logging feature.
+  /// If this configuration is null, logging is disabled.
   LoggingConfiguration? loggingConfiguration;
 
-  /// Configuration for the tracing feature. If this configuration is null,
-  /// tracing is disabled.
+  /// Configuration for the tracing feature.
+  /// If this configuration is null, tracing is disabled.
   TracingConfiguration? tracingConfiguration;
 
-  /// Configuration for the Real User Monitoring (RUM) feature. If this
-  /// configuration is null, RUM is disabled
+  /// Configuration for the Real User Monitoring (RUM) feature.
+  /// If this configuration is null, RUM is disabled.
   RumConfiguration? rumConfiguration;
 
   /// Any additional configuration to be passed to the native SDKs.
   final Map<String, dynamic> additionalConfig;
 
-  /// Configurations for additional plugins that will be created after Datadog
-  /// is initialized.
+  /// Configurations for additional plugins that will be created
+  /// after [DatadogSdk] is initialized.
   final List<DatadogPluginConfiguration> additionalPlugins = [];
 
   DdSdkConfiguration({
